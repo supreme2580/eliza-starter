@@ -1,7 +1,20 @@
-import { Character, ModelProviderName, defaultCharacter } from "@ai16z/eliza";
+import { Character, Clients, ModelProviderName, defaultCharacter } from "@ai16z/eliza";
+import { starknetPlugin } from "@ai16z/plugin-starknet";
 
 export const character: Character = {
     ...defaultCharacter,
+    name: "Eliza",
+    plugins: [starknetPlugin],
+    clients: [Clients.DIRECT],
+    modelProvider: ModelProviderName.ANTHROPIC,
+    system: "Generate response for mancala board game",
+    bio: [],
+    lore: [],
+    messageExamples: [],
+    postExamples: [],
+    adjectives: [],
+    people: [],
+    topics: [],
     // name: "Eliza",
     // plugins: [],
     // clients: [],
