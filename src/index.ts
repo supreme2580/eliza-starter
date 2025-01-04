@@ -64,7 +64,7 @@ export function parseArguments(): {
 }
 
 export async function loadCharacters(
-  charactersArg: string
+  charactersArg: string,
 ): Promise<Character[]> {
   let characterPaths = charactersArg?.split(",").map((filePath) => {
     if (path.basename(filePath) === filePath) {
@@ -101,7 +101,7 @@ export async function loadCharacters(
 
 export function getTokenForProvider(
   provider: ModelProviderName,
-  character: Character
+  character: Character,
 ) {
   switch (provider) {
     case ModelProviderName.OPENAI:
@@ -162,7 +162,7 @@ function initializeDatabase(dataDir: string) {
 
 export async function initializeClients(
   character: Character,
-  runtime: IAgentRuntime
+  runtime: IAgentRuntime,
 ) {
   const clients = [];
   const clientTypes = character.clients?.map((str) => str.toLowerCase()) || [];
@@ -203,27 +203,23 @@ export function createAgent(
   character: Character,
   db: IDatabaseAdapter,
   cache: ICacheManager,
-  token: string
+  token: string,
 ) {
   elizaLogger.success(
     elizaLogger.successesTitle,
     "Creating runtime for character",
-    character.name
+    character.name,
   );
   return new AgentRuntime({
     databaseAdapter: db,
     token,
     modelProvider: character.modelProvider,
-    evaluators: starknetPlugin.evaluators,
+    evaluators: [...starknetPlugin.evaluators],
     character,
-    plugins: [
-      bootstrapPlugin,
-      nodePlugin,
-      starknetPlugin,
-    ],
-    providers: starknetPlugin.providers,
-    actions: starknetPlugin.actions,
-    services: starknetPlugin.services,
+    plugins: [bootstrapPlugin, nodePlugin, starknetPlugin],
+    providers: [...starknetPlugin.providers],
+    actions: [...starknetPlugin.actions],
+    services: [...starknetPlugin.services],
     managers: [],
     cacheManager: cache,
   });
@@ -270,7 +266,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
   } catch (error) {
     elizaLogger.error(
       `Error starting agent for character ${character.name}:`,
-      error
+      error,
     );
     console.error(error);
     throw error;
@@ -346,7 +342,7 @@ async function handleUserInput(input, agentId) {
           userId: "user",
           userName: "User",
         }),
-      }
+      },
     );
 
     const data = await response.json();
