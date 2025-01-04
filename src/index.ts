@@ -1,10 +1,10 @@
-import { PostgresDatabaseAdapter } from "@ai16z/adapter-postgres";
-import { SqliteDatabaseAdapter } from "@ai16z/adapter-sqlite";
-import { DirectClientInterface } from "@ai16z/client-direct";
-import { DiscordClientInterface } from "@ai16z/client-discord";
-import { AutoClientInterface } from "@ai16z/client-auto";
-import { TelegramClientInterface } from "@ai16z/client-telegram";
-import { TwitterClientInterface } from "@ai16z/client-twitter";
+import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { DirectClientInterface } from "@elizaos/client-direct";
+import { DiscordClientInterface } from "@elizaos/client-discord";
+import { AutoClientInterface } from "@elizaos/client-auto";
+import { TelegramClientInterface } from "@elizaos/client-telegram";
+import { TwitterClientInterface } from "@elizaos/client-twitter";
 import {
   DbCacheAdapter,
   FsCacheAdapter,
@@ -20,9 +20,8 @@ import {
   settings,
   IDatabaseAdapter,
   validateCharacterConfig,
-} from "@ai16z/eliza";
-import { bootstrapPlugin } from "@ai16z/plugin-bootstrap";
-import { nodePlugin } from "@ai16z/plugin-node";
+} from "@elizaos/core";
+import { createNodePlugin } from "@elizaos/plugin-node";
 import Database from "better-sqlite3";
 import fs from "fs";
 import readline from "readline";
@@ -30,8 +29,8 @@ import yargs from "yargs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { character } from "./character.ts";
-import type { DirectClient } from "@ai16z/client-direct";
-import { starknetPlugin } from "@ai16z/plugin-starknet";
+import type { DirectClient } from "@elizaos/client-direct";
+import { starknetPlugin } from "@elizaos/plugin-starknet";
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -210,16 +209,17 @@ export function createAgent(
     "Creating runtime for character",
     character.name,
   );
+  const nodePlugin = createNodePlugin();
   return new AgentRuntime({
     databaseAdapter: db,
     token,
     modelProvider: character.modelProvider,
-    evaluators: [...starknetPlugin.evaluators],
+    evaluators: starknetPlugin.evaluators,
     character,
-    plugins: [bootstrapPlugin, nodePlugin, starknetPlugin],
-    providers: [...starknetPlugin.providers],
-    actions: [...starknetPlugin.actions],
-    services: [...starknetPlugin.services],
+    plugins: [starknetPlugin],
+    providers: starknetPlugin.providers,
+    actions: starknetPlugin.actions,
+    services: starknetPlugin.services,
     managers: [],
     cacheManager: cache,
   });
@@ -274,7 +274,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
 }
 
 const startAgents = async () => {
-  const directClient = await DirectClientInterface.start();
+  const directClient = await DirectClientInterface.start(undefined);
   const args = parseArguments();
 
   let charactersArg = args.characters || args.character;

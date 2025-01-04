@@ -3,8 +3,8 @@ import {
   Clients,
   ModelProviderName,
   defaultCharacter,
-} from "@ai16z/eliza";
-import { starknetPlugin } from "@ai16z/plugin-starknet";
+} from "@elizaos/core";
+import { starknetPlugin } from "@elizaos/plugin-starknet";
 
 export const character: Character = {
   name: "Eliza",
@@ -66,7 +66,6 @@ Always use the Starknet Sepolia testnet for transactions.`,
   ],
   postExamples: [],
   adjectives: [],
-  people: [],
   topics: [],
   style: {
     all: [],
