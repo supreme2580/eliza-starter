@@ -7,7 +7,6 @@ import { TelegramClientInterface } from "@ai16z/client-telegram";
 import { TwitterClientInterface } from "@ai16z/client-twitter";
 import {
   DbCacheAdapter,
-  defaultCharacter,
   FsCacheAdapter,
   ICacheManager,
   IDatabaseCacheAdapter,
@@ -23,7 +22,6 @@ import {
   validateCharacterConfig,
 } from "@ai16z/eliza";
 import { bootstrapPlugin } from "@ai16z/plugin-bootstrap";
-import { solanaPlugin } from "@ai16z/plugin-solana";
 import { nodePlugin } from "@ai16z/plugin-node";
 import Database from "better-sqlite3";
 import fs from "fs";
@@ -95,7 +93,7 @@ export async function loadCharacters(
 
   if (loadedCharacters.length === 0) {
     console.log("No characters found, using default character");
-    loadedCharacters.push(defaultCharacter);
+    loadedCharacters.push(character);
   }
 
   return loadedCharacters;
