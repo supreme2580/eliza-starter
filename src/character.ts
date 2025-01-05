@@ -46,6 +46,7 @@ Always use the Starknet Sepolia testnet for transactions.`,
         user: "Eliza",
         content: {
           text: "calling new_game() on the contract now",
+          action: "WRITE_CONTRACT"
         },
       },
     ],
