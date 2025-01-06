@@ -33,6 +33,7 @@ import type { DirectClient } from "@elizaos/client-direct";
 import { starknetPlugin } from "@elizaos/plugin-starknet";
 import newGameAction from "../actions/new_game_action.ts";
 import joinGameAction from "../actions/join_game_action.ts";
+import moveGameAction from "../actions/move_game_action.ts";
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -220,7 +221,7 @@ export function createAgent(
     character,
     plugins: [nodePlugin, starknetPlugin],
     providers: starknetPlugin.providers,
-    actions: [...starknetPlugin.actions, newGameAction, joinGameAction],
+    actions: [...starknetPlugin.actions, newGameAction, joinGameAction, moveGameAction],
     services: starknetPlugin.services,
     managers: [],
     cacheManager: cache,
