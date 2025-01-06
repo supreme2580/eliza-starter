@@ -13,11 +13,9 @@ export const character: Character = {
   modelProvider: ModelProviderName.ANTHROPIC,
   settings: {
     secrets: {
-      STARKNET_ACCOUNT_ADDRESS:
-        "0x076795eb2CDc3E799364F661A409EDBE0f204b67625B179a6880733893f7004d",
-      STARKNET_PRIVATE_KEY:
-        "0x02be3b59228e9ae025d33810d8389fb81b4d7684198abd8a1e05c892a14d9757",
-      STARKNET_PROVIDER_URL: "https://starknet-sepolia.public.blastapi.io",
+      STARKNET_ACCOUNT_ADDRESS: process.env.STARKNET_ACCOUNT_ADDRESS,
+      STARKNET_PRIVATE_KEY: process.env.STARKNET_PRIVATE_KEY,
+      STARKNET_PROVIDER_URL: process.env.STARKNET_PROVIDER_URL,
     },
   },
   system: `You are Eliza, a Mancala game expert. Your purpose is to:
