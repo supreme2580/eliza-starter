@@ -15,6 +15,8 @@ import { getStarknetAccount, getStarknetProvider } from "../utils/index.js";
 import { validateStarknetConfig } from "../environment.js";
 import { Contract } from "starknet";
 
+const CONTRACT_ADDRESS = "0x073d5f249b9519777bcca407e74b7230c935abded8b1f21717f75a5a8ce962a5";
+
 export interface ContractWriteContent extends Content {
     contractAddress: string;
     functionName: string;
@@ -121,30 +123,28 @@ export default {
             const account = getStarknetAccount(runtime);
 
             // Get contract ABI
-            const { abi } = await provider.getClassAt(content.contractAddress);
+            const { abi } = await provider.getClassAt(CONTRACT_ADDRESS);
             if (!abi) {
                 throw new Error("Contract ABI not found");
             }
 
             // Create contract instance
-            const contract = new Contract(abi, content.contractAddress, provider);
+            const contract = new Contract(abi, CONTRACT_ADDRESS, provider);
             contract.connect(account);
 
-            // Execute the function
-            const tx = await contract.invoke(content.functionName, content.args);
+            // Execute new_game function
+            const tx = await contract.invoke("new_game", []);
 
             elizaLogger.success(
-                `Contract function ${content.functionName} executed successfully! tx: ${tx.transaction_hash}`
+                `Successfully created new game! tx: ${tx.transaction_hash}`
             );
             
             if (callback) {
                 callback({
-                    text: `Contract function executed successfully! Transaction hash: ${tx.transaction_hash}`,
+                    text: `New game created! Transaction hash: ${tx.transaction_hash}`,
                     content: {
                         success: true,
-                        txHash: tx.transaction_hash,
-                        contractAddress: content.contractAddress,
-                        functionName: content.functionName,
+                        txHash: tx.transaction_hash
                     },
                 });
             }
