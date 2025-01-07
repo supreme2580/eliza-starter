@@ -39,7 +39,7 @@ const moveGameTemplate = `Respond with a JSON markdown block containing the extr
 Example response:
 \`\`\`json
 {
-    "gameId": "0x123...",
+    "gameId": "0x123",
     "selectedPit": 3,
     "opponentPits": [4,4,4,4,4,4],
     "opponentMancala": 10
@@ -48,40 +48,49 @@ Example response:
 
 {{recentMessages}}
 
-Important Mancala Rules to Consider:
-1. Distribution Rules:
-   - Seeds are distributed counter-clockwise, one in each pit
-   - Skip opponent's Mancala (pit 7) during distribution
-   - If last seed lands in your Mancala, you get another turn
-   - If last seed lands in an empty pit on your side, capture opposite pit's seeds
+Board Layout:
+[Opponent 8-13]    [14]
+[Your 1-6]         [7]
 
-2. Capture Logic:
-   - When last seed lands in empty pit on your side
-   - You capture all seeds from opponent's opposite pit
-   - Both captured seeds and capturing seed go to your Mancala
-   - Can only capture if opposite pit has seeds
+Mancala Rules:
+1. Basic Movement:
+   - Choose a pit (1-6) on your side
+   - Distribute seeds counter-clockwise, one per pit
+   - Skip opponent's Mancala (14) during distribution
+   - Include your own Mancala (7) in distribution
+
+2. Special Rules:
+   - Extra Turn: If last seed lands in your Mancala (7), you get another turn
+   - Capture: If last seed lands in an empty pit on your side (1-6):
+     * AND opposite opponent pit (8-13) has seeds
+     * You capture all seeds from opponent's opposite pit
+     * Both captured seeds and your last seed go to your Mancala (7)
+   - Opposite Pits: Your pit number + opponent pit number = 14
+     * Example: Your pit 1 is opposite opponent pit 13
+     * Example: Your pit 6 is opposite opponent pit 8
 
 3. Game End:
-   - Game ends when all pits on one side are empty
+   - When all pits on one side are empty
    - Remaining seeds go to owner's Mancala
+   - Player with most seeds in Mancala wins
 
-Strategic Considerations:
-1. Prioritize moves that:
-   - Land in your Mancala for extra turns
-   - Create capture opportunities
-   - Protect your seeds from captures
-2. Avoid moves that:
-   - Leave your pits vulnerable to captures
-   - Distribute seeds to opponent's strong positions
+Strategic Priority:
+1. Moves that land in your Mancala (7) for extra turns
+2. Moves that enable captures from opponent's pits
+3. Moves that protect your seeds from captures
+4. Moves that build up seeds in your pits
 
-Given the recent messages about the Mancala game state:
-1. Extract the game ID
-2. Extract opponent's pit values
-3. Extract opponent's mancala value
-4. Analyze the position considering above rules
-5. Select best pit to move from (1-6)
+Given the game state message:
+1. Extract the game ID (starts with 0x)
+2. Extract opponent's pit values (8-13, right to left)
+3. Extract opponent's mancala value (14)
+4. Select best pit (1-6) based on rules and strategy
 
-Respond with a JSON markdown block containing the game state and your selected move.`;
+Respond with a JSON markdown block containing only:
+- gameId: The extracted game ID
+- selectedPit: Your chosen pit number (1-6)
+- opponentPits: Array of opponent's pit values
+- opponentMancala: Opponent's mancala value`;
 
 const CONTRACT_ADDRESS = "0x073d5f249b9519777bcca407e74b7230c935abded8b1f21717f75a5a8ce962a5";
 
